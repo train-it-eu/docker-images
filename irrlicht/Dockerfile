@@ -1,7 +1,8 @@
 FROM trainiteu/cpp
 
 # Install workshop's dependencies.
-RUN export DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update \
+    && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libgl1-mesa-dev libxcursor-dev libxxf86vm-dev libxext-dev
 
 # Clean apt for docker image.
