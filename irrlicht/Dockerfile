@@ -5,6 +5,9 @@ RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libgl1-mesa-dev libxcursor-dev libxxf86vm-dev libxext-dev
 
+# Change Conan profiles to allow GNU extensions
+RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' /root/.conan/profiles/*
+
 # Clean apt for docker image.
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get autoremove -y \
