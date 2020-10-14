@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 RUN sudo apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get -y upgrade \
-    && sudo apt-get -y install build-essential g++-10 cmake ninja-build pkg-config gdb cppcheck valgrind clang clang-tools clang-format clang-tidy libc++-dev lldb
+    && sudo apt-get -y install build-essential g++-10 cmake ninja-build pkg-config gdb cppcheck valgrind clang clang-tools clang-format clang-tidy libc++-dev libc++abi-dev lldb
 
 # Install Conan.
 RUN export DEBIAN_FRONTEND=noninteractive \

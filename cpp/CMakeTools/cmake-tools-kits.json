@@ -1,18 +1,18 @@
 [
   {
-    "name": "Clang 10.0.0",
-    "toolchainFile": "/root/cmake/toolchains/warnings_clang.cmake",
+    "name": "Clang 10.0.0 + libc++",
+    "toolchainFile": "/root/cmake/toolchains/clang_libc++.cmake",
     "compilers": {
       "C": "/bin/clang-10",
       "CXX": "/bin/clang++-10"
     }
   },
   {
-    "name": "GCC 9.3.0",
-    "toolchainFile": "/root/cmake/toolchains/warnings_gcc.cmake",
+    "name": "Clang 10.0.0 + libstdc++",
+    "toolchainFile": "/root/cmake/toolchains/warnings_clang.cmake",
     "compilers": {
-      "C": "/bin/gcc-9",
-      "CXX": "/bin/g++-9"
+      "C": "/bin/clang-10",
+      "CXX": "/bin/clang++-10"
     }
   },
   {
@@ -21,6 +21,14 @@
     "compilers": {
       "C": "/bin/gcc-10",
       "CXX": "/bin/g++-10"
+    }
+  },
+  {
+    "name": "GCC 9.3.0",
+    "toolchainFile": "/root/cmake/toolchains/warnings_gcc.cmake",
+    "compilers": {
+      "C": "/bin/gcc-9",
+      "CXX": "/bin/g++-9"
     }
   },
   {
@@ -36,17 +44,17 @@
     }
   },
   {
-    "name": "GCC for x86_64-linux-gnu 9.3.0",
-    "compilers": {
-      "C": "/bin/x86_64-linux-gnu-gcc-9",
-      "CXX": "/bin/x86_64-linux-gnu-g++-9"
-    }
-  },
-  {
     "name": "GCC for x86_64-linux-gnu 10.2.0",
     "compilers": {
       "C": "/bin/x86_64-linux-gnu-gcc-10",
       "CXX": "/bin/x86_64-linux-gnu-g++-10"
+    }
+  },
+  {
+    "name": "GCC for x86_64-linux-gnu 9.3.0",
+    "compilers": {
+      "C": "/bin/x86_64-linux-gnu-gcc-9",
+      "CXX": "/bin/x86_64-linux-gnu-g++-9"
     }
   }
 ]
