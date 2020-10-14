@@ -19,6 +19,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && conan remote add conan-train-it https://api.bintray.com/conan/train-it/conan-train-it
 ADD .conan /root/.conan
 
+# Add common CMake scripts
+ADD cmake /root/cmake
+
 # Clean apt for docker image.
 RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get autoremove -y \
