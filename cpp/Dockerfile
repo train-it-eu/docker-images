@@ -22,6 +22,9 @@ ADD .conan /root/.conan
 # Add common CMake scripts
 ADD cmake /root/cmake
 
+# Predefine VSCode CMake kits
+ADD CMakeTools /root/.local/share/CMakeTools
+
 # Clean apt for docker image.
 RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get autoremove -y \
