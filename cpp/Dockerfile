@@ -17,7 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && conan user \
     && conan remote add conan-mpusz https://api.bintray.com/conan/mpusz/conan-mpusz \
     && conan remote add conan-train-it https://api.bintray.com/conan/train-it/conan-train-it
-ADD .conan /root/.conan
+ADD conan /root/.conan
 
 # Add common CMake scripts
 ADD cmake /root/cmake
