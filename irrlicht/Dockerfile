@@ -5,8 +5,9 @@ RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libgl1-mesa-dev libxcursor-dev libxxf86vm-dev libxext-dev
 
-# Change Conan profiles to allow GNU extensions
-RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' /root/.conan/profiles/*
+# Update Conan configuration for the workshop
+RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' /root/.conan/profiles/* \
+    && conan remote add conan-nonstd https://api.bintray.com/conan/martinmoene/nonstd-lite
 
 # Clean apt for docker image.
 RUN export DEBIAN_FRONTEND=noninteractive \
