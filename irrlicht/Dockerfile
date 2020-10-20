@@ -6,8 +6,7 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends libgl1-mesa-dev libxcursor-dev libxxf86vm-dev libxext-dev
 
 # Update Conan configuration for the workshop
-RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' /root/.conan/profiles/* \
-    && conan remote add conan-nonstd https://api.bintray.com/conan/martinmoene/nonstd-lite
+RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' /root/.conan/profiles/*
 
 # Clean apt for docker image.
 RUN export DEBIAN_FRONTEND=noninteractive \
