@@ -1,18 +1,18 @@
 [
   {
-    "name": "Clang 10.0.0 + libc++",
+    "name": "Clang 11.0.0 + libc++",
     "toolchainFile": "/root/cmake/toolchains/clang_libc++.cmake",
     "compilers": {
-      "C": "/bin/clang-10",
-      "CXX": "/bin/clang++-10"
+      "C": "/bin/clang-11",
+      "CXX": "/bin/clang++-11"
     }
   },
   {
-    "name": "Clang 10.0.0 + libstdc++",
+    "name": "Clang 11.0.0 + libstdc++",
     "toolchainFile": "/root/cmake/toolchains/warnings_clang.cmake",
     "compilers": {
-      "C": "/bin/clang-10",
-      "CXX": "/bin/clang++-10"
+      "C": "/bin/clang-11",
+      "CXX": "/bin/clang++-11"
     }
   },
   {

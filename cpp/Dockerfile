@@ -8,7 +8,14 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 RUN sudo apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get -y upgrade \
-    && sudo apt-get -y install build-essential g++-10 cmake ninja-build pkg-config gdb cppcheck valgrind clang clang-tools clang-format clang-tidy libc++-dev libc++abi-dev lldb
+    && sudo apt-get -y install build-essential g++-10 cmake ninja-build pkg-config gdb cppcheck valgrind 
+    
+# Install the clang 11
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && sudo apt-get -y install --no-install-recommends software-properties-common \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - \
+    && sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main" \
+    && sudo apt-get -y install clang-11 clang-tools-11 clang-11-doc libclang-common-11-dev libclang-11-dev libclang1-11 clang-format-11 clangd-11 libc++-11-dev libc++abi-11-dev libfuzzer-11-dev lldb-11 lld-11
 
 # Install Conan.
 RUN export DEBIAN_FRONTEND=noninteractive \
