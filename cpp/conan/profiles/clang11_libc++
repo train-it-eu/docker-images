@@ -11,6 +11,6 @@ build_type=Release
 [options]
 [build_requires]
 [env]
-CXX=/usr/bin/clang++-10
-CC=/usr/bin/clang-10
+CXX=/usr/bin/clang++-11
+CC=/usr/bin/clang-11
 CONAN_CMAKE_GENERATOR=Ninja
