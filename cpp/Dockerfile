@@ -2,7 +2,6 @@ FROM trainiteu/cpp-base
 
 # Install Conan
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && sudo apt-get -y install --no-install-recommends python3-pip \
     && pip3 install -U conan \
     && conan user \
     && conan remote add conan-mpusz https://api.bintray.com/conan/mpusz/conan-mpusz \
