@@ -16,7 +16,7 @@ RUN sudo apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get -y upgrade \
     && sudo apt-get -y install build-essential g++-${GCC_VERSION} ninja-build pkg-config gdb cppcheck valgrind python3-pip
-    
+
 # Install Clang
 RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get -y install --no-install-recommends software-properties-common \
