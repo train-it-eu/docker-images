@@ -11,7 +11,7 @@ ARG GCC_VERSION=10
 ARG CLANG_VERSION=11
 ARG CMAKE_VERSION=3.19.0
 
-# Install needed packages. Use a separate RUN statement to add your own dependencies.
+# Install needed packages
 RUN sudo apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get -y upgrade \
@@ -24,10 +24,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-${CLANG_VERSION} main" \
     && sudo apt-get -y install clang-${CLANG_VERSION} clang-tools-${CLANG_VERSION} clang-${CLANG_VERSION}-doc libclang-common-${CLANG_VERSION}-dev libclang-${CLANG_VERSION}-dev libclang1-${CLANG_VERSION} clang-format-${CLANG_VERSION} clangd-${CLANG_VERSION} libc++-${CLANG_VERSION}-dev libc++abi-${CLANG_VERSION}-dev libfuzzer-${CLANG_VERSION}-dev lldb-${CLANG_VERSION} lld-${CLANG_VERSION}
 
-# Set default compilers and generators
+# Set default compilers
 ENV CC=/usr/bin/gcc-${GCC_VERSION}
 ENV CXX=/usr/bin/g++-${GCC_VERSION}
-ENV CMAKE_GENERATOR=Ninja
 
 # Download, build, and install CMake
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -42,7 +41,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && cd .. \
     && rm -rf cmake-${CMAKE_VERSION}*
 
-# Clean apt for docker image.
+# Clean apt for docker image
 RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \

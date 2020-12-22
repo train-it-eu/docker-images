@@ -10,6 +10,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # Add Conan profiles
 ADD conan /root/.conan
 
+# Set a default CMake generator
+ENV CMAKE_GENERATOR=Ninja Multi-Config
+
 # Add common CMake scripts
 ADD cmake /root/cmake
 
