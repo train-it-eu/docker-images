@@ -8,8 +8,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${UBUNTU_VERSION}
 
 # Tool versions
 ARG GCC_VERSION=10
-ARG CLANG_VERSION=11
-ARG CMAKE_VERSION=3.19.0
+ARG CLANG_VERSION=12
 
 # Install needed packages
 RUN sudo apt-get update \
