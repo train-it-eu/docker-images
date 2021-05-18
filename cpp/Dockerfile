@@ -3,7 +3,7 @@ FROM trainiteu/cpp-base
 # Install Conan
 RUN export DEBIAN_FRONTEND=noninteractive \
     && pip3 install -U conan \
-    && conan user \
+    && conan config init \
     && conan remote add conan-mpusz https://api.bintray.com/conan/mpusz/conan-mpusz \
     && conan remote add conan-train-it https://api.bintray.com/conan/train-it/conan-train-it
 
