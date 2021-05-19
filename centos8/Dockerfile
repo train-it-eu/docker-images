@@ -28,6 +28,10 @@ RUN dnf -y install openssl-devel \
     && cd .. \
     && rm -rf cmake-${CMAKE_VERSION}*
 
+# Get rid of default ccache bindings
+RUN rm -rf /usr/lib64/ccache/
+
+# Clean caches
 RUN dnf clean all
 
 ENTRYPOINT ["/usr/sbin/sshd", "-D"]
