@@ -1,4 +1,4 @@
-ARG UBUNTU_BASE=hirsute
+ARG UBUNTU_BASE=impish
 
 FROM ubuntu:${UBUNTU_BASE}
 
