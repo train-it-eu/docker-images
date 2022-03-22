@@ -13,35 +13,35 @@ USER root
 
 # Install needed packages
 RUN install-packages \
-        g++-${GCC_VERSION} \
-        ninja-build \
-        gdb \
-        cppcheck \
-        valgrind \
-        python3-pip \
-        python-is-python3 \
-        # needed to build CMake
-        libssl-dev
+    g++-${GCC_VERSION} \
+    ninja-build \
+    gdb \
+    cppcheck \
+    valgrind \
+    python3-pip \
+    python-is-python3 \
+    # needed to build CMake
+    libssl-dev
 
 # Install Clang
 RUN lsb_rel=`lsb_release -cs` \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add - \
     && add-apt-repository "deb http://apt.llvm.org/${lsb_rel}/ llvm-toolchain-${lsb_rel}-${CLANG_VERSION} main" \
     && install-packages \
-        clang-${CLANG_VERSION} \
-        clang-tools-${CLANG_VERSION} \
-        clang-${CLANG_VERSION}-doc \
-        libclang-common-${CLANG_VERSION}-dev \
-        libclang-${CLANG_VERSION}-dev \
-        libclang1-${CLANG_VERSION} \
-        clang-format-${CLANG_VERSION} \
-        clangd-${CLANG_VERSION} \
-        libc++-${CLANG_VERSION}-dev \
-        libc++abi-${CLANG_VERSION}-dev \
-        libunwind-${CLANG_VERSION}-dev \
-        libfuzzer-${CLANG_VERSION}-dev \
-        lldb-${CLANG_VERSION} \
-        lld-${CLANG_VERSION}
+    clang-${CLANG_VERSION} \
+    clang-tools-${CLANG_VERSION} \
+    clang-${CLANG_VERSION}-doc \
+    libclang-common-${CLANG_VERSION}-dev \
+    libclang-${CLANG_VERSION}-dev \
+    libclang1-${CLANG_VERSION} \
+    clang-format-${CLANG_VERSION} \
+    clangd-${CLANG_VERSION} \
+    libc++-${CLANG_VERSION}-dev \
+    libc++abi-${CLANG_VERSION}-dev \
+    libunwind-${CLANG_VERSION}-dev \
+    libfuzzer-${CLANG_VERSION}-dev \
+    lldb-${CLANG_VERSION} \
+    lld-${CLANG_VERSION}
 
 # Set default compilers
 ENV CC=/usr/bin/gcc-${GCC_VERSION}

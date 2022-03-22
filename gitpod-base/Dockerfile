@@ -10,22 +10,22 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN yes | unminimize
 
 RUN install-packages \
-        zip \
-        unzip \
-        bash-completion \
-        build-essential \
-        git \
-        git-lfs \
-        gpg-agent \
-        htop \
-        less \
-        locales \
-        man-db \
-        software-properties-common \
-        sudo \
-        time \
-        ssl-cert \
-        wget
+    zip \
+    unzip \
+    bash-completion \
+    build-essential \
+    git \
+    git-lfs \
+    gpg-agent \
+    htop \
+    less \
+    locales \
+    man-db \
+    software-properties-common \
+    sudo \
+    time \
+    ssl-cert \
+    wget
 
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
