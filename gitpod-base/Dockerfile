@@ -32,6 +32,8 @@ ENV LANG=en_US.UTF-8
 
 ENV DOCKER_USER_NAME=gitpod
 ENV HOME=/home/${DOCKER_USER_NAME}
+ENV PYTHONUSERBASE=/workspace/.pip-modules
+ENV PATH="${PYTHONUSERBASE}/bin:${PATH}"
 ENV CONAN_USER_HOME=/workspace
 
 ### Gitpod user ###
