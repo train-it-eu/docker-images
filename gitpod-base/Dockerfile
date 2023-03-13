@@ -1,4 +1,4 @@
-ARG UBUNTU_BASE=impish
+ARG UBUNTU_BASE=kinetic
 
 FROM ubuntu:${UBUNTU_BASE}
 
@@ -35,6 +35,9 @@ ENV HOME=/home/${DOCKER_USER_NAME}
 ENV PYTHONUSERBASE=/workspace/.pip-modules
 ENV PATH="${PYTHONUSERBASE}/bin:${PATH}"
 ENV CONAN_USER_HOME=/workspace
+
+RUN sudo mkdir ${CONAN_USER_HOME} \
+    && sudo chown ${DOCKER_USER_NAME}:${DOCKER_USER_NAME} ${CONAN_USER_HOME}
 
 ### Gitpod user ###
 # '-l': see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
