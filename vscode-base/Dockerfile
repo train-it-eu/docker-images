@@ -1,16 +1,11 @@
-# See here for image contents: https://github.com/devcontainers/images/tree/main/src/base-ubuntu
+FROM trainiteu/base
 
-# Get the image base
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
-USER root
-
-COPY install-packages /usr/bin
-
-RUN install-packages \
-        build-essential \
-        software-properties-common
-
-ENV DOCKER_USER_NAME=vscode
+ENV DOCKER_USER_NAME=ubuntu
 ENV HOME=/home/${DOCKER_USER_NAME}
-ENV PROJECT_PATH=/workspaces
-ENV CONAN_USER_HOME=$HOME
+
+# passwordless sudo for users in the 'sudo' group
+RUN sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+
+WORKDIR $HOME
+# custom Bash prompt
+RUN { echo && echo "PS1='\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]\$(__git_ps1 \" (%s)\") $ '" ; } >> .bashrc

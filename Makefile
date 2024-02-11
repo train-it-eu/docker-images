@@ -5,13 +5,16 @@ PUSH_ALL_TARGETS = push-gitpod-base push-gitpod-cpp push-vscode-base push-vscode
 
 all: $(ALL_TARGETS)
 
-gitpod-base: gitpod-base/Dockerfile
+base: base/Dockerfile
+	docker build -t trainiteu/base:latest base
+
+gitpod-base: base gitpod-base/Dockerfile
 	docker build -t trainiteu/gitpod-base:latest gitpod-base
 
 gitpod-cpp: gitpod-base cpp/Dockerfile
 	docker build -t trainiteu/gitpod-cpp:latest --build-arg BASE_IMAGE=gitpod cpp
 
-vscode-base: vscode-base/Dockerfile
+vscode-base: base vscode-base/Dockerfile
 	docker build -t trainiteu/vscode-base:latest vscode-base
 
 vscode-cpp: vscode-base cpp/Dockerfile
@@ -25,13 +28,16 @@ irrlicht: vscode-cpp-conan irrlicht/Dockerfile
 
 push-all: $(PUSH_ALL_TARGETS)
 
-push-gitpod-base: gitpod-base
+push-base: base
+	docker push trainiteu/base:latest
+
+push-gitpod-base: push-base gitpod-base
 	docker push trainiteu/gitpod-base:latest
 
 push-gitpod-cpp: push-gitpod-base gitpod-cpp
 	docker push trainiteu/gitpod-cpp:latest
 
-push-vscode-base: vscode-base
+push-vscode-base: push-base vscode-base
 	docker push trainiteu/vscode-base:latest
 
 push-vscode-cpp: push-vscode-base vscode-cpp
