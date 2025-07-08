@@ -5,9 +5,9 @@ ARG BASE_IMAGE
 FROM trainiteu/${BASE_IMAGE}-base
 
 # Tool versions
-ARG GCC_VERSION=13
-ARG CLANG_VERSION=17
-ARG CMAKE_VERSION=3.28.1
+ARG GCC_VERSION=15
+ARG CLANG_VERSION=20
+ARG CMAKE_VERSION=4.0.3
 
 USER root
 
@@ -24,9 +24,9 @@ RUN install-packages \
     libssl-dev
 
 # Install Clang
-RUN lsb_rel=`lsb_release -cs` \
-    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add - \
-    && add-apt-repository "deb http://apt.llvm.org/${lsb_rel}/ llvm-toolchain-${lsb_rel}-${CLANG_VERSION} main" \
+RUN wget https://apt.llvm.org/llvm.sh \
+    && chmod +x llvm.sh \
+    && ./llvm.sh ${CLANG_VERSION} \
     && install-packages \
     clang-${CLANG_VERSION} \
     clang-tools-${CLANG_VERSION} \
