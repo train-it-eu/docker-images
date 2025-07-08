@@ -1,4 +1,4 @@
-ARG UBUNTU_BASE=mantic
+ARG UBUNTU_BASE=plucky
 
 FROM ubuntu:${UBUNTU_BASE}
 
@@ -6,8 +6,6 @@ COPY install-packages /usr/bin
 
 ### base ###
 ARG DEBIAN_FRONTEND=noninteractive
-
-RUN yes | unminimize
 
 RUN install-packages \
     zip \
