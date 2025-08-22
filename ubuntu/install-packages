@@ -1,11 +1,15 @@
 #!/bin/bash
 
 set -o errexit
+set -o pipefail
 
 if [ $# = 0 ]; then
+  echo >&2 "Usage: install-packages <package1> [package2] ..."
   echo >&2 "No packages specified"
   exit 1
 fi
+
+echo "Installing packages: $*"
 
 # Set a runlevel to avoid invoke-rc.d warnings
 # http://manpages.ubuntu.com/manpages/focal/man8/runlevel.8.html#environment
@@ -23,6 +27,7 @@ if [ ! -d "${DAZZLE_MARKS}" ]; then
 fi
 
 apt-get update
+apt-get upgrade -y
 apt-get install -yq --no-install-recommends "$@"
 
 cp /var/lib/dpkg/status "${DAZZLE_MARKS}/${TIMESTAMP}.status"
@@ -35,3 +40,5 @@ rm -rf \
    /var/lib/apt/lists/* \
    /tmp/* \
    /var/tmp/*
+
+echo "Successfully installed packages: $*"

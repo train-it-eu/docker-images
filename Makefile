@@ -1,41 +1,26 @@
-ALL_TARGETS = gitpod-base gitpod-cpp vscode-base vscode-cpp vscode-cpp-conan
-PUSH_ALL_TARGETS = push-gitpod-base push-gitpod-cpp push-vscode-base push-vscode-cpp push-vscode-cpp-conan
+ALL_TARGETS = ubuntu cpp cpp-conan
+PUSH_ALL_TARGETS = push-ubuntu push-cpp push-cpp-conan
 
 .phony: all $(ALL_TARGETS) push-all $(PUSH_ALL_TARGETS)
 
 all: $(ALL_TARGETS)
 
-base: base/Dockerfile
-	docker build -t trainiteu/base:latest base
+ubuntu: ubuntu/Dockerfile
+	docker build -t trainiteu/ubuntu:latest ubuntu
 
-gitpod-base: base gitpod-base/Dockerfile
-	docker build -t trainiteu/gitpod-base:latest gitpod-base
+cpp: ubuntu cpp/Dockerfile
+	docker build -t trainiteu/cpp:latest cpp
 
-gitpod-cpp: gitpod-base cpp/Dockerfile
-	docker build -t trainiteu/gitpod-cpp:latest --build-arg BASE_IMAGE=gitpod cpp
-
-vscode-base: base vscode-base/Dockerfile
-	docker build -t trainiteu/vscode-base:latest vscode-base
-
-vscode-cpp: vscode-base cpp/Dockerfile
-	docker build -t trainiteu/vscode-cpp:latest --build-arg BASE_IMAGE=vscode cpp
-
-vscode-cpp-conan: vscode-cpp cpp-conan/Dockerfile
-	docker build -t trainiteu/vscode-cpp-conan:latest --build-arg BASE_IMAGE=vscode --no-cache cpp-conan
+cpp-conan: cpp cpp-conan/Dockerfile
+	docker build -t trainiteu/cpp-conan:latest --no-cache cpp-conan
 
 irrlicht: vscode-cpp-conan irrlicht/Dockerfile
 	docker build -t trainiteu/irrlicht:latest --build-arg --no-cache irrlicht
 
 push-all: $(PUSH_ALL_TARGETS)
 
-push-base: base
-	docker push trainiteu/base:latest
-
-push-gitpod-base: push-base gitpod-base
-	docker push trainiteu/gitpod-base:latest
-
-push-gitpod-cpp: push-gitpod-base gitpod-cpp
-	docker push trainiteu/gitpod-cpp:latest
+push-ubuntu: ubuntu
+	docker push trainiteu/ubuntu:latest
 
 push-vscode-base: push-base vscode-base
 	docker push trainiteu/vscode-base:latest

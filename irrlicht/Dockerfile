@@ -8,4 +8,4 @@ RUN install-packages \
     libxext-dev
 
 # Update Conan configuration for the workshop
-RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' ${CONAN_USER_HOME}/.conan2/profiles/*
+RUN sed -i -r 's/cppstd=([[:digit:]]+)/cppstd=gnu\1/' ${CONAN_HOME}/profiles/*
