@@ -17,6 +17,9 @@ RUN install-packages \
 
 USER ${DOCKER_USER_NAME}
 
+# Add Conan configuration for additional compilers
+ADD conan $CONAN_HOME
+
 # Install additional Python tools required for mp-units development
 RUN pipx install pre-commit \
   && pipx install identify \
