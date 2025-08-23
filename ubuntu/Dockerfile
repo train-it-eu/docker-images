@@ -1,12 +1,19 @@
+# The MIT License (MIT)
+# Copyright (c) 2025 Mateusz Pusz
+
+# Basic Ubuntu Docker image
+
 ARG UBUNTU_BASE=plucky
 
 FROM ubuntu:${UBUNTU_BASE}
 
-COPY install-packages /usr/bin
+ENV DOCKER_BUILDKIT=1
+ENV DOCKER_USER_NAME=ubuntu
+ENV HOME=/home/${DOCKER_USER_NAME}
+ENV CONAN_HOME=/workspaces/.conan2
 
-### base ###
 ARG DEBIAN_FRONTEND=noninteractive
-
+COPY install-packages /usr/bin
 RUN install-packages \
     # Archive utilities for handling compressed files
     zip \
@@ -29,20 +36,18 @@ RUN install-packages \
     # Python virtual environment support
     python3-venv
 
-ENV DOCKER_USER_NAME=ubuntu
-ENV DOCKER_BUILDKIT=1
-ENV HOME=/home/${DOCKER_USER_NAME}
-ENV CONAN_HOME=/workspaces/.conan2
-
-# Create workspaces directory and set permissions
-RUN mkdir -p /workspaces \
-    && chown -R ${DOCKER_USER_NAME}:${DOCKER_USER_NAME} /workspaces
-
-# configure git-lfs
-RUN sudo git lfs install --system
 
 # passwordless sudo for users in the 'sudo' group
 RUN sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+
+USER ${DOCKER_USER_NAME}
+
+# configure git-lfs
+RUN git lfs install --system
+
+# Create workspaces directory and set permissions
+RUN sudo mkdir -p /workspaces \
+    && sudo chown -R ${DOCKER_USER_NAME}:${DOCKER_USER_NAME} /workspaces
 
 WORKDIR $HOME
 
