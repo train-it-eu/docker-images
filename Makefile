@@ -1,5 +1,6 @@
-ALL_TARGETS = ubuntu cpp cpp-conan
-PUSH_ALL_TARGETS = push-ubuntu push-cpp push-cpp-conan
+ALL_TARGETS = ubuntu cpp cpp-conan mp-units
+PUSH_ALL_TARGETS = push-ubuntu push-cpp push-cpp-conan push-mp-units
+
 
 .phony: all $(ALL_TARGETS) push-all $(PUSH_ALL_TARGETS)
 
@@ -14,22 +15,25 @@ cpp: ubuntu cpp/Dockerfile
 cpp-conan: cpp cpp-conan/Dockerfile
 	docker build -t trainiteu/cpp-conan:latest --no-cache cpp-conan
 
-irrlicht: vscode-cpp-conan irrlicht/Dockerfile
-	docker build -t trainiteu/irrlicht:latest --build-arg --no-cache irrlicht
+mp-units: cpp-conan mp-units/Dockerfile
+	docker build -t trainiteu/mp-units:latest mp-units
+
+irrlicht: cpp-conan irrlicht/Dockerfile
+	docker build -t trainiteu/irrlicht:latest irrlicht
 
 push-all: $(PUSH_ALL_TARGETS)
 
 push-ubuntu: ubuntu
 	docker push trainiteu/ubuntu:latest
 
-push-vscode-base: push-base vscode-base
-	docker push trainiteu/vscode-base:latest
+push-cpp: push-ubuntu cpp
+	docker push trainiteu/cpp:latest
 
-push-vscode-cpp: push-vscode-base vscode-cpp
-	docker push trainiteu/vscode-cpp:latest
+push-cpp-conan: push-cpp cpp-conan
+	docker push trainiteu/cpp-conan:latest
 
-push-vscode-cpp-conan: push-vscode-cpp vscode-cpp-conan
-	docker push trainiteu/vscode-cpp-conan:latest
+push-mp-units: push-cpp-conan mp-units
+	docker push trainiteu/mp-units:latest
 
-push-irrlicht: push-vscode-cpp-conan irrlicht
+push-irrlicht: push-cpp-conan irrlicht
 	docker push trainiteu/irrlicht:latest
