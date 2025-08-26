@@ -12,8 +12,8 @@ ARG CLANG_VERSION=20
 ARG CMAKE_VERSION=4.1.0
 
 # Install Python apps to a path that gets mounted as persistent storage
-ENV PIPX_HOME=/workspaces/.pipx
-ENV PIPX_BIN_DIR=/workspaces/.local/bin
+ENV PIPX_HOME=${WORK_DIR}/.pipx
+ENV PIPX_BIN_DIR=${WORK_DIR}/.local/bin
 ENV PATH="${PIPX_BIN_DIR}:${PATH}"
 
 # Create pipx directories and set permissions

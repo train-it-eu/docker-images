@@ -10,7 +10,8 @@ FROM ubuntu:${UBUNTU_BASE}
 ENV DOCKER_BUILDKIT=1
 ENV DOCKER_USER_NAME=ubuntu
 ENV HOME=/home/${DOCKER_USER_NAME}
-ENV CONAN_HOME=/workspaces/.conan2
+ENV WORK_DIR=/workspaces
+ENV CONAN_HOME=${WORK_DIR}/.conan2
 
 ARG DEBIAN_FRONTEND=noninteractive
 COPY install-packages /usr/bin
@@ -30,7 +31,7 @@ RUN install-packages \
     # Network tools for downloading
     wget \
     curl \
-    # Security and certificates
+    # Se
     ca-certificates \
     gnupg \
     # Python virtual environment support
@@ -46,10 +47,9 @@ USER ${DOCKER_USER_NAME}
 RUN git lfs install --system
 
 # Create workspaces directory and set permissions
-RUN sudo mkdir -p /workspaces \
-    && sudo chown -R ${DOCKER_USER_NAME}:${DOCKER_USER_NAME} /workspaces
-
-WORKDIR $HOME
+RUN sudo mkdir -p ${WORK_DIR} && sudo chown -R ${DOCKER_USER_NAME}:${DOCKER_USER_NAME} ${WORK_DIR}
 
 # custom Bash prompt
-RUN { echo && echo "PS1='\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]\$(__git_ps1 \" (%s)\") $ '" ; } >> .bashrc
+RUN { echo && echo "PS1='\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]\$(__git_ps1 \" (%s)\") $ '" ; } >> ~/.bashrc
+
+WORKDIR ${WORK_DIR}
