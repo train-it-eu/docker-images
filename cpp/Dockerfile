@@ -8,12 +8,12 @@ FROM trainiteu/ubuntu
 
 # Tool versions
 ARG GCC_VERSION=15
-ARG CLANG_VERSION=20
+ARG CLANG_VERSION=21
 ARG CMAKE_VERSION=4.1.0
 
-# Install Python apps to a path that gets mounted as persistent storage
-ENV PIPX_HOME=${WORK_DIR}/.pipx
-ENV PIPX_BIN_DIR=${WORK_DIR}/.local/bin
+ENV CONAN_HOME=${HOME}/.conan2
+ENV PIPX_HOME=${HOME}/.pipx
+ENV PIPX_BIN_DIR=${HOME}/.local/bin
 ENV PATH="${PIPX_BIN_DIR}:${PATH}"
 
 # Create pipx directories and set permissions

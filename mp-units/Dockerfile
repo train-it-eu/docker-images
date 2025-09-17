@@ -20,6 +20,7 @@ RUN install-packages \
   clang-17 clang-tools-17 \
   clang-18 clang-tools-18 \
   clang-19 clang-tools-19 \
+  clang-20 clang-tools-20 \
   # switch to libc++-18 as this is the last version supporting clang-16
   libc++-18-dev \
   # mkdocs dependencies
@@ -50,7 +51,9 @@ RUN sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-16/lib/lib
   sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-19/lib/libc++.modules.json && \
   sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-19/share/libc++ && \
   sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-20/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-20/share/libc++
+  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-20/share/libc++ && \
+  sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-21/lib/libc++.modules.json && \
+  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-21/share/libc++
 
 USER ${DOCKER_USER_NAME}
 
@@ -67,13 +70,15 @@ RUN pipx install pre-commit \
   && pipx inject mkdocs mkdocs-material[imaging] mkdocs-rss-plugin mkdocs-exclude \
   && pipx install mike
 
-WORKDIR ${WORK_DIR}
+WORKDIR ${HOME}
 
 # Install additional tools for API reference generation
-ENV PATH="${WORK_DIR}/node_modules/.bin:${PATH}"
+ENV PATH="${HOME}/node_modules/.bin:${PATH}"
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 RUN npm install split mathjax-full mathjax-node-sre mathjax-node-cli yargs@16.2.0
 RUN cabal update
 RUN tlmgr init-usertree && tlmgr install ulem
+
+WORKDIR ${WORKSPACES}
