@@ -9,11 +9,12 @@ FROM trainiteu/ubuntu
 # Tool versions
 ARG GCC_VERSION=15
 ARG CLANG_VERSION=21
-ARG CMAKE_VERSION=4.1.0
+ARG CMAKE_VERSION=4.2.0
 
-ENV CONAN_HOME=${HOME}/.conan2
-ENV PIPX_HOME=${HOME}/.pipx
-ENV PIPX_BIN_DIR=${HOME}/.local/bin
+ENV PERSISTENT_DIR=${WORKSPACES}/persistent
+ENV CONAN_HOME=${PERSISTENT_DIR}/.conan2
+ENV PIPX_HOME=${PERSISTENT_DIR}/.pipx
+ENV PIPX_BIN_DIR=${PERSISTENT_DIR}/.local/bin
 ENV PATH="${PIPX_BIN_DIR}:${PATH}"
 
 # Create pipx directories and set permissions
