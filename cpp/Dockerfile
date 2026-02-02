@@ -11,14 +11,13 @@ ARG GCC_VERSION=15
 ARG CLANG_VERSION=21
 ARG CMAKE_VERSION=4.2.0
 
-ENV PERSISTENT_DIR=${WORKSPACES}/persistent
-ENV CONAN_HOME=${PERSISTENT_DIR}/.conan2
-ENV PIPX_HOME=${PERSISTENT_DIR}/.pipx
-ENV PIPX_BIN_DIR=${PERSISTENT_DIR}/.local/bin
+ENV CONAN_HOME=${HOME}/.conan2
+ENV PIPX_HOME=${HOME}/.pipx
+ENV PIPX_BIN_DIR=${HOME}/.local/bin
 ENV PATH="${PIPX_BIN_DIR}:${PATH}"
 
 # Create pipx directories and set permissions
-RUN mkdir -p ${PIPX_HOME} ${PIPX_BIN_DIR}
+RUN mkdir -p ${PIPX_HOME} ${PIPX_BIN_DIR} ${CONAN_HOME}
 
 # Install needed packages
 RUN sudo install-packages \
