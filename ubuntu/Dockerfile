@@ -3,11 +3,10 @@
 
 # Basic Ubuntu Docker image
 
-ARG UBUNTU_BASE=plucky
+ARG UBUNTU_BASE=resolute
 
 FROM ubuntu:${UBUNTU_BASE}
 
-ENV DOCKER_BUILDKIT=1
 ENV DOCKER_USER_NAME=ubuntu
 ENV HOME=/home/${DOCKER_USER_NAME}
 ENV WORKSPACES=/workspaces
@@ -30,7 +29,7 @@ RUN install-packages \
     # Network tools for downloading
     wget \
     curl \
-    # Se
+    # Verification of HTTPS servers and signed apt repositories
     ca-certificates \
     gnupg \
     # Python virtual environment support
@@ -38,7 +37,9 @@ RUN install-packages \
 
 
 # passwordless sudo for users in the 'sudo' group
-RUN sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+RUN echo '%sudo ALL=(ALL:ALL) NOPASSWD:ALL' > /etc/sudoers.d/nopasswd \
+    && chmod 0440 /etc/sudoers.d/nopasswd \
+    && visudo -cf /etc/sudoers.d/nopasswd
 
 USER ${DOCKER_USER_NAME}
 

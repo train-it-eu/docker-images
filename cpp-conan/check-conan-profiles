@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Checks that Conan profiles and installed compilers match one to one. It fails when a profile
+# names a compiler that is not installed, or one whose major version differs from the profile's
+# `compiler.version`, and when an installed `g++-N` or `clang++-N` has no profile. Every image that
+# adds profiles or compilers runs it last, so an image ships neither a dead profile nor a compiler
+# that Conan cannot select.
+
+set -euo pipefail
+
+profiles_dir="${CONAN_HOME:-$HOME/.conan2}/profiles"
+fail=0
+declare -A covered=()
+
+for profile in "$profiles_dir"/*; do
+  name="$(basename "$profile")"
+  compiler="$(sed -n 's/^compiler=//p' "$profile")"
+  version="$(sed -n 's/^compiler\.version=//p' "$profile")"
+  if [[ -z $compiler || -z $version ]]; then
+    echo "❌ $name: no compiler or compiler.version"
+    fail=1
+    continue
+  fi
+
+  # The profile's own executable, or the versioned name Conan would use without one.
+  cxx="$(sed -n 's/^tools\.build:compiler_executables=.*"cpp": *"\([^"]*\)".*/\1/p' "$profile")"
+  if [[ -z $cxx ]]; then
+    case $compiler in
+      gcc) cxx="g++-$version" ;;
+      clang) cxx="clang++-$version" ;;
+      *)
+        echo "❌ $name: unknown compiler '$compiler'"
+        fail=1
+        continue
+        ;;
+    esac
+  fi
+
+  if ! command -v "$cxx" >/dev/null; then
+    echo "❌ $name: $cxx is not installed"
+    fail=1
+    continue
+  fi
+  actual="$("$cxx" -dumpversion)"
+  actual="${actual%%.*}"
+  if [[ $actual != "$version" ]]; then
+    echo "❌ $name: compiler.version=$version, but $cxx is version $actual"
+    fail=1
+    continue
+  fi
+  covered["$compiler-$version"]=1
+  echo "✅ $name: $cxx (version $actual)"
+done
+
+for cxx in /usr/bin/g++-[0-9]* /usr/bin/clang++-[0-9]*; do
+  [[ -e $cxx ]] || continue
+  tool="$(basename "$cxx")"
+  version="${tool##*-}"
+  case $tool in
+    g++-*) compiler=gcc ;;
+    *) compiler=clang ;;
+  esac
+  if [[ -z ${covered["$compiler-$version"]:-} ]]; then
+    echo "❌ $tool is installed, but no profile selects $compiler $version"
+    fail=1
+  fi
+done
+
+exit $fail

@@ -4,8 +4,8 @@ build_type=Release
 compiler=clang
 compiler.cppstd=23
 compiler.libcxx=libc++
-compiler.version=19
+compiler.version=22
 os=Linux
 
 [conf]
-tools.build:compiler_executables={"c": "clang-19", "cpp": "clang++-19"}
+tools.build:compiler_executables={"c": "clang-22", "cpp": "clang++-22"}

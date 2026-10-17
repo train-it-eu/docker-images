@@ -5,60 +5,29 @@
 
 FROM trainiteu/cpp-conan
 
-# Add additional LLVM repositories for mp-units compilation verification
-USER root
-RUN wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm-snapshot.gpg && \
-  echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main" >> /etc/apt/sources.list.d/llvm-jammy-16.list
+# Add Conan configuration for additional compilers, owned by the user so that Conan can update it.
+# It comes before the compiler setup, which points each clang profile at that compiler's real
+# binary path.
+COPY --chown=${DOCKER_USER_NAME}:${DOCKER_USER_NAME} conan $CONAN_HOME
 
-# Install additional compilers and tools for mp-units development
-# (g++-14, g++-15, and clang-20 are installed in cpp image already)
-RUN install-packages \
-  g++-12 g++-13 \
-  # install jammy packages from the LLVM apt repository
-  clang-16 clang-tools-16 \
-  # install from the Ubuntu universe apt repository
-  clang-17 clang-tools-17 \
-  clang-18 clang-tools-18 \
-  clang-19 clang-tools-19 \
-  clang-20 clang-tools-20 \
-  # switch to libc++-18 as this is the last version supporting clang-16
-  libc++-18-dev \
-  # mkdocs dependencies
+# The mp-units compiler matrix (GCC 12-16, clang 16-18 and 20-24, each clang with its own static
+# libc++) is set up by the same script that sets up a developer's own machine, so the two cannot
+# drift apart. See the script's header for why apt alone cannot provide the per-version libc++.
+ADD https://raw.githubusercontent.com/mpusz/mp-units/master/.devcontainer/setup_compilers.sh /tmp/setup_compilers.sh
+RUN sudo bash /tmp/setup_compilers.sh \
+  && sudo rm -rf /tmp/setup_compilers.sh /var/lib/apt/lists/*
+
+RUN sudo install-packages \
+  # ProperDocs (Material for MkDocs imaging) dependencies
   libcairo2-dev \
   libfreetype6-dev \
   libffi-dev \
   libjpeg-dev \
   libpng-dev \
   libz-dev \
-  # API reference dependencies
-  latexmk \
-  texlive-latex-recommended \
-  texlive-latex-extra \
-  texlive-fonts-recommended \
-  lmodern \
-  haskell-stack \
-  graphviz \
+  # markdownlint-cli2 and other Node-based pre-commit hooks
   nodejs \
-  npm \
-  ghc \
-  cabal-install
-
-# Expose libc++-18 modules to all the versions of clang compilers
-RUN sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-16/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-16/share/libc++ && \
-  sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-17/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-17/share/libc++ && \
-  sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-19/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-19/share/libc++ && \
-  sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-20/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-20/share/libc++ && \
-  sudo ln -s /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-21/lib/libc++.modules.json && \
-  sudo ln -s /usr/lib/llvm-18/share/libc++ /usr/lib/llvm-21/share/libc++
-
-USER ${DOCKER_USER_NAME}
-
-# Add Conan configuration for additional compilers
-ADD conan $CONAN_HOME
+  npm
 
 # Configure Conan remote with pre-built mp-units dependencies
 RUN conan remote add conan-mp-units-dev https://mpusz.jfrog.io/artifactory/api/conan/conan-mp-units-dev
@@ -66,19 +35,14 @@ RUN conan remote add conan-mp-units-dev https://mpusz.jfrog.io/artifactory/api/c
 # Install additional Python tools required for mp-units development
 RUN pipx install pre-commit \
   && pipx install identify \
-  && pipx install mkdocs \
-  && pipx inject mkdocs mkdocs-material[imaging] mkdocs-rss-plugin mkdocs-exclude \
-  && pipx install mike
+  && pipx install properdocs \
+  && pipx inject properdocs mkdocs-material[imaging] mkdocs-rss-plugin mkdocs-redirects mkdocs-exclude \
+  && pipx inject --include-apps properdocs mike
 
-WORKDIR ${HOME}
-
-# Install additional tools for API reference generation
-ENV PATH="${HOME}/node_modules/.bin:${PATH}"
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN npm install split mathjax-full mathjax-node-sre mathjax-node-cli yargs@16.2.0
-RUN cabal update
-RUN tlmgr init-usertree && tlmgr install ulem
-
 WORKDIR ${WORKSPACES}
+
+# Every installed compiler has a Conan profile, and every profile has its compiler
+RUN check-conan-profiles

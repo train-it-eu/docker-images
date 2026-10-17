@@ -7,9 +7,9 @@
 FROM trainiteu/ubuntu
 
 # Tool versions
-ARG GCC_VERSION=15
-ARG CLANG_VERSION=21
-ARG CMAKE_VERSION=4.2.0
+ARG GCC_VERSION=16
+ARG CLANG_VERSION=23
+ARG CMAKE_VERSION=4.4.4
 
 ENV CONAN_HOME=${HOME}/.conan2
 ENV PIPX_HOME=${HOME}/.pipx
@@ -36,8 +36,6 @@ RUN sudo install-packages \
     python-is-python3 \
     # Modern Python tool installer (isolated environments)
     pipx \
-    # SSL development headers (needed to build CMake)
-    libssl-dev \
     # Required by LLVM installation script
     lsb-release \
     software-properties-common
@@ -69,15 +67,10 @@ RUN sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSI
     && sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_VERSION} 100 \
     && sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-${CLANG_VERSION} 100
 
-# Download, build, and install CMake
-RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz \
-    && tar -xvzf cmake-${CMAKE_VERSION}.tar.gz \
-    && cd cmake-${CMAKE_VERSION} \
-    && ./bootstrap --parallel=$(nproc) --generator=Ninja\
-    && ninja \
-    && sudo ninja install \
-    && cd .. \
-    && rm -rf cmake-${CMAKE_VERSION}*
+# Install Kitware's prebuilt CMake
+RUN wget -qO- https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+    | sudo tar -xz --strip-components=1 -C /usr/local \
+    && cmake --version
 
 # Set a default CMake generator
 ENV CMAKE_GENERATOR="Ninja Multi-Config"
