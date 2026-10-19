@@ -36,7 +36,7 @@ RUN conan remote add conan-mp-units-dev https://mpusz.jfrog.io/artifactory/api/c
 RUN pipx install pre-commit \
   && pipx install identify \
   && pipx install properdocs \
-  && pipx inject properdocs mkdocs-material[imaging] mkdocs-rss-plugin mkdocs-redirects mkdocs-exclude \
+  && pipx inject properdocs mkdocs-material[imaging] mkdocs-rss-plugin mkdocs-redirects \
   && pipx inject --include-apps properdocs mike
 
 ENV LC_ALL=C.UTF-8
