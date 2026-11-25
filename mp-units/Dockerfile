@@ -10,9 +10,10 @@ FROM trainiteu/cpp-conan
 # binary path.
 COPY --chown=${DOCKER_USER_NAME}:${DOCKER_USER_NAME} conan $CONAN_HOME
 
-# The mp-units compiler matrix (GCC 12-16, clang 16-18 and 20-24, each clang with its own static
-# libc++) is set up by the same script that sets up a developer's own machine, so the two cannot
-# drift apart. See the script's header for why apt alone cannot provide the per-version libc++.
+# The mp-units compiler matrix (GCC 12-16, clang 16-18, 20, 21, 23 and 24, each clang with its
+# own static libc++) is set up by the same script that sets up a developer's own machine, so the
+# two cannot drift apart. See the script's header for why apt alone cannot provide the
+# per-version libc++.
 ADD https://raw.githubusercontent.com/mpusz/mp-units/master/.devcontainer/setup_compilers.sh /tmp/setup_compilers.sh
 RUN sudo bash /tmp/setup_compilers.sh \
   && sudo rm -rf /tmp/setup_compilers.sh /var/lib/apt/lists/*

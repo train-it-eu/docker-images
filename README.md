@@ -39,8 +39,8 @@ Build an image and everything it depends on with `make <image>`, for example `ma
 
 ### trainiteu/mp-units
 
-- The mp-units compiler matrix: GCC 12-16 and Clang 16-18 and 20-24, each Clang with its own
-  libc++, set up by mp-units' `.devcontainer/setup_compilers.sh`
+- The mp-units compiler matrix: GCC 12-16 and Clang 16-18, 20, 21, 23 and 24, each Clang with
+  its own libc++, set up by mp-units' `.devcontainer/setup_compilers.sh`
 - A Conan profile for each of those compilers
 - ProperDocs with Material for MkDocs and `mike` for the documentation
 - pre-commit
