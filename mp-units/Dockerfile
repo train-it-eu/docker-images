@@ -5,19 +5,6 @@
 
 FROM trainiteu/cpp-conan
 
-# Add Conan configuration for additional compilers, owned by the user so that Conan can update it.
-# It comes before the compiler setup, which points each clang profile at that compiler's real
-# binary path.
-COPY --chown=${DOCKER_USER_NAME}:${DOCKER_USER_NAME} conan $CONAN_HOME
-
-# The mp-units compiler matrix (GCC 12-16, clang 16-18, 20, 21, 23 and 24, each clang with its
-# own static libc++) is set up by the same script that sets up a developer's own machine, so the
-# two cannot drift apart. See the script's header for why apt alone cannot provide the
-# per-version libc++.
-ADD https://raw.githubusercontent.com/mpusz/mp-units/master/.devcontainer/setup_compilers.sh /tmp/setup_compilers.sh
-RUN sudo bash /tmp/setup_compilers.sh \
-  && sudo rm -rf /tmp/setup_compilers.sh /var/lib/apt/lists/*
-
 RUN sudo install-packages \
   # ProperDocs (Material for MkDocs imaging) dependencies
   libcairo2-dev \
@@ -29,6 +16,20 @@ RUN sudo install-packages \
   # markdownlint-cli2 and other Node-based pre-commit hooks
   nodejs \
   npm
+
+# Add Conan configuration for additional compilers, owned by the user so that Conan can update it.
+# It comes before the compiler setup, which points each clang profile at that compiler's real
+# binary path.
+COPY --chown=${DOCKER_USER_NAME}:${DOCKER_USER_NAME} conan $CONAN_HOME
+
+# The mp-units compiler matrix (GCC 12-16, clang 16-18, 20, 21, 23 and 24, each clang with its
+# own static libc++) is set up by the same script that sets up a developer's own machine, so the
+# two cannot drift apart. See the script's header for why apt alone cannot provide the
+# per-version libc++. It runs after every `install-packages`, whose `apt-get upgrade` would
+# otherwise reinstall the shared libc++ files that the script removes.
+ADD https://raw.githubusercontent.com/mpusz/mp-units/master/.devcontainer/setup_compilers.sh /tmp/setup_compilers.sh
+RUN sudo bash /tmp/setup_compilers.sh \
+  && sudo rm -rf /tmp/setup_compilers.sh /var/lib/apt/lists/*
 
 # Configure Conan remote with pre-built mp-units dependencies
 RUN conan remote add conan-mp-units-dev https://mpusz.jfrog.io/artifactory/api/conan/conan-mp-units-dev
